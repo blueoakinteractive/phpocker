@@ -21,6 +21,7 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'dockerIP',
       message: 'Enter the IP address of your docker machine',
+			default: '127.0.0.1',
       store: true
     }
   ];
