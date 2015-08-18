@@ -1,0 +1,36 @@
+redis:
+  image: redis
+phpfpm:
+  command: php-fpm --allow-to-run-as-root
+  build: compose/images/php
+  volumes:
+    - /var/www/<%= projectName %>/compose/conf/fpm.conf:/usr/local/etc/php-fpm.conf
+    - /var/www/<%= projectName %>/www:/var/www/html
+    - /var/www/<%= projectName %>/compose/conf/php.ini:/usr/local/etc/php/conf.d/local.ini
+  links:
+   - mysql
+   - redis
+mysql:
+  command: mysqld --user=root --verbose
+  image: mysql
+  ports:
+    - "3306"
+  volumes:
+    - /var/data/<%= projectName %>:/var/lib/mysql
+    - /var/www/<%= projectName %>/compose/conf/mysql.cnf:/etc/mysql/my.cnf
+  environment:
+    MYSQL_DATABASE: data
+    MYSQL_USER: mysql
+    MYSQL_PASSWORD: mysql
+    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+nginx:
+  image: nginx:1.9.0
+  volumes:
+    - /var/www/<%= projectName %>/compose/conf/nginx.conf:/etc/nginx/conf.d/default.conf
+    - /var/www/<%= projectName %>/www:/var/www/html
+  ports:
+    - "80"
+  links:
+    - phpfpm
+  environment:
+    VIRTUAL_HOST: <%= projectName %>
