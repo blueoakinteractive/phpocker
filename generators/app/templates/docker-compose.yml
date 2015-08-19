@@ -23,6 +23,7 @@ mysql:
     MYSQL_USER: mysql
     MYSQL_PASSWORD: mysql
     MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    MYSQL_ROOT_PASSWORD: root
 nginx:
   image: nginx:1.9.0
   volumes:
