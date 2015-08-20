@@ -31,6 +31,7 @@ nginx:
     - /var/www/<%= projectName %>:/var/www/html
   ports:
     - "80"
+    - "443"
   links:
     - phpfpm
   environment:
