@@ -19,18 +19,16 @@ module.exports = yeoman.generators.Base.extend({
     },
     {
       type: 'input',
-      name: 'dockerIP',
-      message: 'Enter the IP address of your docker machine',
-			default: '127.0.0.1',
+      name: 'hostIP',
+      message: 'Host IP of your system on the docker network (typically .1 host on your docker-machine eth0 net)',
       store: true
     }
   ];
-
-    this.prompt(prompts, function (props) {
-      this.props = props;
-      done();
-    }.bind(this));
-  },
+  this.prompt(prompts, function (props) {
+    this.props = props;
+    done();
+  }.bind(this));
+},
 
   writing: {
     app: function () {
@@ -40,21 +38,17 @@ module.exports = yeoman.generators.Base.extend({
         { projectName: this.props.projectName }
       );
       this.fs.copyTpl(
-        this.templatePath('.drushrc.php'),
-        this.destinationPath('.drushrc.php'),
+        this.templatePath('conf/*'),
+        this.destinationPath('compose/conf'),
         {
           projectName: this.props.projectName,
-          dockerIP: this.props.dockerIP,
+          hostIP: this.props.hostIP
         }
       );
       this.fs.copy(
-       this.templatePath('conf'),
-       this.destinationPath('compose/conf')
-     );
-     this.fs.copy(
-      this.templatePath('images'),
-      this.destinationPath('compose/images')
-    );
+        this.templatePath('images'),
+        this.destinationPath('compose/images')
+      );
     }
   },
 
