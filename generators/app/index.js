@@ -22,6 +22,18 @@ module.exports = yeoman.generators.Base.extend({
       name: 'hostIP',
       message: 'Host IP of your system on the docker network (typically .1 host on your docker-machine eth0 net)',
       store: true
+    },
+    {
+      type: 'input',
+      name: 'blackfireServerId',
+      message: 'Enter an optional blackfire server id',
+      store: true
+    },
+    {
+      type: 'input',
+      name: 'blackfireServerToken',
+      message: 'Enter an optional blackfire server token',
+      store: true
     }
   ];
   this.prompt(prompts, function (props) {
@@ -35,7 +47,11 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.copyTpl(
         this.templatePath('docker-compose.yml'),
         this.destinationPath('docker-compose.yml'),
-        { projectName: this.props.projectName }
+        {
+          projectName: this.props.projectName,
+          blackfireServerId: this.props.blackfireServerId,
+          blackfireServerToken: this.props.blackfireServerToken
+        }
       );
       this.fs.copyTpl(
         this.templatePath('conf/*'),

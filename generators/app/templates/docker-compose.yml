@@ -12,6 +12,7 @@ phpfpm:
   links:
    - mysql
    - redis
+   - blackfire
 mysql:
   command: mysqld --user=root --verbose
   image: mysql
@@ -38,3 +39,10 @@ nginx:
     - phpfpm
   environment:
     VIRTUAL_HOST: <%= projectName %>
+blackfire:
+  image: blackfire/blackfire
+  ports:
+    - "8707"
+  environment:
+    BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
+    BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
