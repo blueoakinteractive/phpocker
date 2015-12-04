@@ -15,7 +15,8 @@ module.exports = yeoman.generators.Base.extend({
     var prompts = [{
       type: 'input',
       name: 'projectName',
-      message: 'Enter your project name?'
+      message: 'Enter your project name?',
+      default: process.cwd().split("/").pop()
     },
     {
       type: 'input',
