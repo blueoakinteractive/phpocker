@@ -1,7 +1,7 @@
-redis:
-  image: redis
-  ports:
-    - "6379"
+# redis:
+#   image: redis
+#   ports:
+#     - "6379"
 phpfpm:
   command: php-fpm --allow-to-run-as-root
   build: compose/images/php
@@ -11,8 +11,8 @@ phpfpm:
     - /var/www/<%= projectName %>/compose/conf/php.ini:/usr/local/etc/php/conf.d/local.ini
   links:
    - mysql
-   - redis
-   - blackfire
+   # - redis
+   # - blackfire
 mysql:
   command: mysqld --user=root --verbose
   image: mysql:5.6
@@ -39,10 +39,10 @@ nginx:
     - phpfpm
   environment:
     VIRTUAL_HOST: <%= projectName %>
-blackfire:
-  image: blackfire/blackfire
-  ports:
-    - "8707"
-  environment:
-    BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
-    BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
+# blackfire:
+#   image: blackfire/blackfire
+#   ports:
+#     - "8707"
+#   environment:
+#     BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
+#     BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
