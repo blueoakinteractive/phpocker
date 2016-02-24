@@ -11,6 +11,7 @@ phpfpm:
     - /var/www/<%= projectName %>/compose/conf/php.ini:/usr/local/etc/php/conf.d/local.ini
   links:
    - mysql
+   # - solr
    # - redis
    # - blackfire
 mysql:
@@ -46,3 +47,9 @@ nginx:
 #   environment:
 #     BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
 #     BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
+# solr:
+#   image: solr:5.5
+#   ports:
+#     - "8983"
+#   volumes:
+#     - /var/www/<%= projectName %>/solr:/opt/solr/server/solr/<%= projectName %>
