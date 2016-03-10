@@ -22,6 +22,8 @@ explicit_defaults_for_timestamp
 # localhost which is more compatible and is not less secure.
 bind-address	= 0.0.0.0
 
+max_allowed_packet = 128M
+
 #log-error	= /var/log/mysql/error.log
 
 # Recommended in standard MySQL setup
