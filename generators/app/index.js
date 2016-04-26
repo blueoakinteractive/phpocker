@@ -43,8 +43,49 @@ module.exports = yeoman.generators.Base.extend({
   }.bind(this));
 },
 
+  setupAliases: function() {
+    var done = this.async();
+
+    // Drush alias prompts.
+    this.prompt({
+      type: 'confirm',
+      name: 'setupAliases',
+      message: 'Would you like to create drush aliases?',
+      default: false
+    }, function(props) {
+      this.setupAliases = props.setupAliases;
+      if (!this.setupAliases) {
+        done();
+      }
+      else {
+        var aliasPrompts = [
+          {
+            type: 'input',
+            name: 'aliasName',
+            message: 'Enter a drush alias name.',
+            default: process.cwd().split("/").pop().split(".").shift()
+          },
+          {
+            type: 'input',
+            name: 'portNumber',
+            message: 'Enter your project\'s ssh port number.',
+            default: '22'
+          }
+        ];
+        this.prompt(aliasPrompts, function (props) {
+          this.props.drushAliases = props;
+          done();
+        }.bind(this));
+      }
+    }.bind(this));
+  },
+
   writing: {
     app: function () {
+      // Get current user directory.
+      var userDir = process.env.HOME + '/';
+
+      // Create docker-compose.yml.
       this.fs.copyTpl(
         this.templatePath('docker-compose.yml'),
         this.destinationPath('docker-compose.yml'),
@@ -54,6 +95,8 @@ module.exports = yeoman.generators.Base.extend({
           blackfireServerToken: this.props.blackfireServerToken
         }
       );
+
+      // Create compose/conf folder and files.
       this.fs.copyTpl(
         this.templatePath('conf/*'),
         this.destinationPath('compose/conf'),
@@ -62,10 +105,31 @@ module.exports = yeoman.generators.Base.extend({
           hostIP: this.props.hostIP
         }
       );
+
+      // Create compose/images folder and files.
       this.fs.copy(
         this.templatePath('images'),
         this.destinationPath('compose/images')
       );
+
+      // Create drush aliases based on user input.
+      if (this.setupAliases) {
+        this.fs.copyTpl(
+          this.templatePath('drush-alias'),
+          this.destinationPath(userDir + '.drush/'), {
+            aliasName: this.props.drushAliases.aliasName,
+            portNumber: this.props.drushAliases.portNumber
+          }
+        );
+        this.fs.move(
+          this.destinationPath(userDir + '.drush/placeholder.aliases.drushrc.php'),
+          this.destinationPath(userDir + '.drush/' + this.props.drushAliases.aliasName + '.aliases.drushrc.php'),
+          {
+            aliasName: this.props.aliasName
+          }
+        );
+      }
+
     }
   },
 
