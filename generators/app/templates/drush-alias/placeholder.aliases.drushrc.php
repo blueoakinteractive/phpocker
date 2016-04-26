@@ -15,4 +15,5 @@ $aliases['master'] = array (
 // Alias for the <%= aliasName %> local environment.
 $aliases['_local'] = array (
   'root' => '/var/www/<%= aliasName %>.boi/www',
+  'uri' => 'http://<%= aliasName %>.boi',
 );

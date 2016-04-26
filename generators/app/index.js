@@ -73,7 +73,7 @@ module.exports = yeoman.generators.Base.extend({
           }
         ];
         this.prompt(aliasPrompts, function (props) {
-          this.props = props;
+          this.props.drushAliases = props;
           done();
         }.bind(this));
       }
@@ -117,13 +117,13 @@ module.exports = yeoman.generators.Base.extend({
         this.fs.copyTpl(
           this.templatePath('drush-alias'),
           this.destinationPath(userDir + '.drush/'), {
-            aliasName: this.props.aliasName,
-            portNumber: this.props.portNumber
+            aliasName: this.props.drushAliases.aliasName,
+            portNumber: this.props.drushAliases.portNumber
           }
         );
         this.fs.move(
           this.destinationPath(userDir + '.drush/placeholder.aliases.drushrc.php'),
-          this.destinationPath(userDir + '.drush/' + this.props.aliasName + '.aliases.drushrc.php'),
+          this.destinationPath(userDir + '.drush/' + this.props.drushAliases.aliasName + '.aliases.drushrc.php'),
           {
             aliasName: this.props.aliasName
           }
