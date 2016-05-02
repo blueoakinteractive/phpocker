@@ -69,7 +69,8 @@ module.exports = yeoman.generators.Base.extend({
             type: 'input',
             name: 'portNumber',
             message: 'Enter your project\'s ssh port number.',
-            default: '22'
+            default: '22',
+            store: true
           }
         ];
         this.prompt(aliasPrompts, function (props) {
