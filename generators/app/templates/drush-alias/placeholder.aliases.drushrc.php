@@ -17,3 +17,6 @@ $aliases['_local'] = array (
   'root' => '/var/www/<%= aliasName %>.boi/www',
   'uri' => 'http://<%= aliasName %>.boi',
 );
+
+// Sync files from master to _local
+$options['shell-aliases']['pull-files'] = '!drush rsync @<%= aliasName %>.master:%files/ @<%= aliasName %>._local:%files';
