@@ -97,6 +97,16 @@ module.exports = yeoman.generators.Base.extend({
         }
       );
 
+      // Create compose/conf folder and files.
+      this.fs.copyTpl(
+        this.templatePath('conf/*'),
+        this.destinationPath('compose/conf'),
+        {
+          projectName: this.props.projectName,
+          hostIP: this.props.hostIP
+        }
+      );
+
       // Create drush aliases based on user input.
       if (this.setupAliases) {
         this.fs.copyTpl(
