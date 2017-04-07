@@ -22,7 +22,7 @@ mysql:
     MYSQL_DATABASE: data
     MYSQL_USER: mysql
     MYSQL_PASSWORD: mysql
-    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     MYSQL_ROOT_PASSWORD: root
 nginx:
   image: nginx:alpine
