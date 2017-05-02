@@ -20,6 +20,13 @@ module.exports = yeoman.generators.Base.extend({
     },
     {
       type: 'input',
+      name: 'stack',
+      message: 'Enter the name of the stack for this build (ie: drupal-php5, drupal-php7, etc...)',
+      store: true,
+      default: 'drupal-php7'
+    },
+    {
+      type: 'input',
       name: 'hostIP',
       message: 'Host IP of your system on the docker network (typically .1 host on your docker-machine eth0 net)',
       store: true
@@ -88,7 +95,7 @@ module.exports = yeoman.generators.Base.extend({
 
       // Create docker-compose.yml.
       this.fs.copyTpl(
-        this.templatePath('docker-compose.yml'),
+        this.templatePath(this.props.stack + '/docker-compose.yml'),
         this.destinationPath('docker-compose.yml'),
         {
           projectName: this.props.projectName,
@@ -99,7 +106,7 @@ module.exports = yeoman.generators.Base.extend({
 
       // Create compose/conf folder and files.
       this.fs.copyTpl(
-        this.templatePath('conf/*'),
+        this.templatePath(this.props.stack + '/conf/*'),
         this.destinationPath('compose/conf'),
         {
           projectName: this.props.projectName,
@@ -110,7 +117,7 @@ module.exports = yeoman.generators.Base.extend({
       // Create drush aliases based on user input.
       if (this.setupAliases) {
         this.fs.copyTpl(
-          this.templatePath('drush-alias'),
+          this.templatePath(this.props.stack + '/drush-alias'),
           this.destinationPath(userDir + '.drush/'), {
             aliasName: this.props.drushAliases.aliasName,
             portNumber: this.props.drushAliases.portNumber
