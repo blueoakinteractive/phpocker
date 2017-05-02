@@ -6,7 +6,6 @@ phpfpm:
   image: blueoakinteractive/php-fpm:7.0.11-dev
   volumes:
     - /var/www/<%= projectName %>:/var/www/html
-    - /var/www/<%= projectName %>/compose/conf/php.ini:/etc/php5/conf.d/zzzzzz-php.ini
   links:
     - mysql
     # - solr
