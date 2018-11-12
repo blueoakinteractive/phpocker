@@ -99,6 +99,7 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('docker-compose.yml'),
         {
           projectName: this.props.projectName,
+          networkName: this.props.projectName.replace('.boi', ''),
           blackfireServerId: this.props.blackfireServerId,
           blackfireServerToken: this.props.blackfireServerToken
         }

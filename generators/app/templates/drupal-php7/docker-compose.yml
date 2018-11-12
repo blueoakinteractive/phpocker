@@ -1,51 +1,84 @@
-# redis:
-#   image: redis
-#   ports:
-#     - "6379"
-phpfpm:
-  image: blueoakinteractive/php-fpm:7.0.11-dev
-  volumes:
-    - /var/www/<%= projectName %>:/var/www/html
-    - /var/www/<%= projectName %>/compose/conf/php.ini:/etc/php7/conf.d/zzzzzz-php.ini
-  links:
-    - mysql
-    # - solr
-    # - redis
-    # - blackfire
-mysql:
-  image: blueoakinteractive/mariadb:10.1
-  ports:
-    - "3306"
-  volumes:
-    - /var/data/<%= projectName %>:/var/lib/mysql
-  environment:
-    MYSQL_DATABASE: data
-    MYSQL_USER: mysql
-    MYSQL_PASSWORD: mysql
-    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    MYSQL_ROOT_PASSWORD: root
-nginx:
-  image: nginx:alpine
-  volumes:
-    - /var/www/<%= projectName %>/compose/conf/nginx.conf:/etc/nginx/conf.d/default.conf
-    - /var/www/<%= projectName %>:/var/www/html
-  ports:
-    - "80"
-    - "443"
-  links:
-    - phpfpm
-  environment:
-    VIRTUAL_HOST: <%= projectName %>
-# blackfire:
-#   image: blackfire/blackfire
-#   ports:
-#     - "8707"
-#   environment:
-#     BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
-#     BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
-# solr:
-#   image: solr:5.5
-#   ports:
-#     - "8983"
-#   volumes:
-#     - /var/www/<%= projectName %>/solr:/opt/solr/server/solr/<%= projectName %>
+version: "3"
+
+services: 
+  phpfpm:
+    image: blueoakinteractive/php-fpm:7.0.11-dev
+    volumes:
+      - /var/www/<%= projectName %>:/var/www/html
+      - /var/www/<%= projectName %>/compose/conf/php.ini:/etc/php7/conf.d/zzzzzz-php.ini
+    links:
+      - mysql
+      # - elasticsearch.internal
+      # - solr
+      # - redis
+      # - blackfire
+    networks:
+      - <%= networkName %>
+  mysql:
+    image: blueoakinteractive/mariadb:10.1
+    ports:
+      - "3306"
+    volumes:
+      - /var/data/<%= projectName %>:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: data
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - <%= networkName %>
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - /var/www/<%= projectName %>/compose/conf/nginx.conf:/etc/nginx/conf.d/default.conf
+      - /var/www/<%= projectName %>:/var/www/html
+    ports:
+      - "80"
+      - "443"
+    links:
+      - phpfpm
+    networks:
+      - traefik
+      - <%= networkName %>
+    labels:
+      - "traefik.frontend.rule=Host:<%= projectName %>"
+      - "traefik.docker.network=traefik"
+      - "traefik.enable=true"
+  # redis:
+  #   image: redis
+  #   ports:
+  #     - "6379"
+  #   networks:
+  #     - <%= networkName %>
+  # blackfire:
+  #   image: blackfire/blackfire
+  #   ports:
+  #     - "8707"
+  #   environment:
+  #     BLACKFIRE_SERVER_ID: <%= blackfireServerId %>
+  #     BLACKFIRE_SERVER_TOKEN: <%= blackfireServerToken %>
+  #   networks:
+  #     - <%= networkName %>
+  # solr:
+  #   image: solr:5.5
+  #   ports:
+  #     - "8983"
+  #   volumes:
+  #     - /var/www/<%= projectName %>/solr:/opt/solr/server/solr/<%= projectName %>
+  #   networks:
+  #     - <%= networkName %>
+  # elasticsearch.internal:
+  #   container_name: elasticsearch.internal
+  #   image: blueoakinteractive/elasticsearch:5.6
+  #   ports:
+  #     - "9200"
+  #   networks:
+  #     - <%= networkName %>
+
+networks:
+  traefik:
+    external:
+      name: traefik
+  <%= networkName %>:
+    driver: bridge
